@@ -1,5 +1,6 @@
-config,ini
+config.ini
 temp/
 discordtranscriptor/
 __pycache__/
 oldstuff/
+*.kate-swp
