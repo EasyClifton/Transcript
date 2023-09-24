@@ -17,6 +17,8 @@ discord_token = ''
 
 config_filename = "config.ini"
 
+# Clear temp files
+utils.clear_temp()
 
 # Checks whether the config exists and creates an empty one if it doesn't.
 

@@ -1,5 +1,6 @@
  # Embed generator
 
+import os
 from os.path import exists
 import datetime
 import random
@@ -14,6 +15,13 @@ def clear_temp():
     '''
     Clears the temp folder
     '''
+
+    for filename in os.listdir("./temp"):
+        file_path = os.path.join("./temp", filename)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+
+
 def transcribe(filepath, config):
 
     whispermode = config['OPTIONS']['WhisperMode']
@@ -22,6 +30,7 @@ def transcribe(filepath, config):
     if whispermode == "local":
         whisper_model = whisper.load_model(model)
         result = whisper_model.transcribe(filepath)
+        clear_temp()
         return result["text"]
 
     elif whispermode == "online":
@@ -29,10 +38,12 @@ def transcribe(filepath, config):
         openai.api_key = config['SECRETS']['OpenAIToken']
         audio_file = open(filepath, "rb")
         result = openai.Audio.transcribe("whisper-1", audio_file)
+        clear_temp()
         return result["text"]
 
     else:
         logging.error(f"Unrecognized WhisperMode in config! Can only be 'online' or 'local', '{whispermode}' found instead!\nExiting.")
+        clear_temp()
         sys.exit()
 
 
