@@ -8,7 +8,6 @@ import logging
 import sys
 
 import discord
-import whisper
 import openai
 
 def clear_temp():
@@ -28,6 +27,7 @@ def transcribe(filepath, config):
     model = config['OPTIONS']['WhisperModel']
 
     if whispermode == "local":
+        import whisper
         whisper_model = whisper.load_model(model)
         result = whisper_model.transcribe(filepath)
         clear_temp()

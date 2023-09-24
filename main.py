@@ -14,7 +14,6 @@ import whisper
 import openai
 
 discord_token = ''
-
 config_filename = "config.ini"
 
 # Clear temp files
@@ -30,6 +29,7 @@ if not conf_exists:
 
 config = configutil.read_config(config_filename)
 
+logging.info(f"Using {config['OPTIONS']['WhisperMode']} transcription mode.")
 
 if not exists("./temp"):
     logging.error("No temp folder, creating!")
