@@ -15,9 +15,6 @@ import openai
 discord_token = ''
 config_filename = "config.ini"
 
-# Clear temp files
-utils.clear_temp()
-
 # Checks whether the config exists and creates an empty one if it doesn't.
 
 conf_exists = configutil.check_existance(config_filename)
@@ -35,6 +32,8 @@ if not exists("./temp"):
     os.makedirs("./temp")
     logging.info("Temp folder created.")
 
+# Clear temp files
+utils.clear_temp()
 
 intents = discord.Intents.default()
 intents.message_content = True
