@@ -10,7 +10,6 @@ from os.path import exists
 import logging
 
 import discord
-import whisper
 import openai
 
 discord_token = ''
