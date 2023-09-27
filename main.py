@@ -1,4 +1,3 @@
-# https://discord.com/api/oauth2/authorize?client_id=1155250274835910766&permissions=139586829376&scope=bot
 # TODO: ERROR CHECKING AND HANDLING!!!!
 
 import configutil
@@ -10,13 +9,12 @@ from os.path import exists
 import logging
 
 import discord
-import openai
+from discord.ext import commands
 
 discord_token = ''
 config_filename = "config.ini"
 
 # Checks whether the config exists and creates an empty one if it doesn't.
-
 conf_exists = configutil.check_existance(config_filename)
 if not conf_exists:
     create_default_config(filename=config_filename)
@@ -27,6 +25,7 @@ config = configutil.read_config(config_filename)
 
 logging.info(f"Using {config['OPTIONS']['WhisperMode']} transcription mode.")
 
+# Make sure the temp dir exists and create it if it doesn't'
 if not exists("./temp"):
     logging.error("No temp folder, creating!")
     os.makedirs("./temp")
@@ -38,9 +37,15 @@ utils.clear_temp()
 intents = discord.Intents.default()
 intents.message_content = True
 
-client = discord.Client(intents=intents)
+client = commands.Bot(command_prefix='!', intents=intents)
 
 discord_token = config['SECRETS']['DiscordToken']
+
+
+@client.event
+async def setup_hook():
+    await client.load_extension("commands")
+
 
 @client.event
 async def on_ready():
@@ -48,27 +53,22 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+
     if message.author == client.user:
         return
-
-    if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
-
 
     if message.attachments:  # if message has an attachment(s)
         attachment = message.attachments[0]
         if attachment.is_voice_message():
 
-            msg_hash = hash(attachment)
+            filepath = await utils.save_audio(attachment)
 
-            await attachment.save(f"./temp/{msg_hash}.ogg")
-
-            filepath = f"./temp/{msg_hash}.ogg"
-
-            transcription = utils.transcribe(filepath=filepath, config=config)
+            transcription = utils.transcribe(filepath=filepath) #config=config # Pass the config file TODO: rework thisssss
 
             embed = utils.make_embed(transcript=transcription, author=message.author)
             await message.reply(embed=embed)
+
+    await client.process_commands(message)
 
 client.run(discord_token)
 

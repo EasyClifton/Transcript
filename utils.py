@@ -7,8 +7,14 @@ import random
 import logging
 import sys
 
+# TODO: Rework and figure out the config system
+import configutil
+
 import discord
-import openai
+
+# Temp solution
+config_filename = "config.ini"
+config = configutil.read_config(config_filename)
 
 def clear_temp():
     '''
@@ -20,8 +26,28 @@ def clear_temp():
         if os.path.isfile(file_path):
             os.remove(file_path)
 
+def get_audio_attachments(message):
+    pass
+    # This is for later
 
-def transcribe(filepath, config):
+
+# This async doesn't do anything, does it? -need to learn
+async def save_audio(attachment):
+
+    '''
+    Accepts an attachment object and saves the audio
+    '''
+
+    msg_hash = hash(attachment)
+    filepath = f"./temp/{msg_hash}.ogg"
+    if attachment.is_voice_message():
+        await attachment.save(filepath)
+        return filepath
+
+
+
+# make async? -need to learn
+def transcribe(filepath):
 
     whispermode = config['OPTIONS']['WhisperMode']
     model = config['OPTIONS']['WhisperModel']
@@ -34,7 +60,7 @@ def transcribe(filepath, config):
         return result["text"]
 
     elif whispermode == "online":
-
+        import openai
         openai.api_key = config['SECRETS']['OpenAIToken']
         audio_file = open(filepath, "rb")
         result = openai.Audio.transcribe("whisper-1", audio_file)
@@ -47,7 +73,7 @@ def transcribe(filepath, config):
         sys.exit()
 
 
-def make_embed(transcript, author):
+def make_embed(transcript, author, jump_url: None):
 
     funnies = ["Voice messages: Because reading minds is so 2022.",
            "Listening to voice messages so you don't have to.",
@@ -64,7 +90,17 @@ def make_embed(transcript, author):
     #else:
     #    name = message.author.nick
 
-    embed=discord.Embed(description=f"> {transcript}")
+
+    if transcript == "":
+        # Add embed colors
+        transcript = "*No text was returned by Whisper.*"
+    else:
+        transcript = f"> {transcript}"
+
+    if jump_url is not None:
+        transcript = f"{transcript}\n\n[Jump to message](<{jump_url}>)"
+
+    embed=discord.Embed(description=transcript)
     embed.timestamp = datetime.datetime.now()
     embed.set_author(name=name, icon_url=author.avatar.url)
     embed.set_footer(text=f"{random.choice(funnies)}")

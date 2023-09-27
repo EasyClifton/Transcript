@@ -7,13 +7,15 @@ The main thing is, it works, even though it's a mess.
 
 ## List of things yet to be implemented:
 
-- [ ] Deleting temp files!!!
+- [x] Deleting temp files!!!
 - [ ] Error-checking and handling
 - [ ] Naming, sorting out functions and files...
-- [ ] (Slash) Commands
+- [x] Transcription command for older messages
 - [ ] 'Apps' context menu actions (for transcribing older messages)
 - [ ] Settings and how to store them
 - [ ] Customization (what to show in the footer, a "funny message", stats or nothing)
 - [ ] Figuring out what to do with the config (generate it through code or include a file)
 - [ ] Stats (and, again, storing them)
+- [ ] Send a "place reserving" message while waiting for the transcript.
+- [ ] For the separate transcription command, add a check for normal audio files
 - [ ] more?
