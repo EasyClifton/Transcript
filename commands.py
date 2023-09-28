@@ -1,3 +1,5 @@
+"""A cog that handles commands."""
+
 import utils
 
 import discord
@@ -7,8 +9,16 @@ class Commands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+
     @commands.command()
     async def transcribe(self, ctx, message: discord.Message=None):
+        """
+        Find and transcribe a referenced message.
+
+        If the message issuing the command is a reply to a voice message, the voice message will be transcribed.
+        If a message ID is provided as a command argument, the message will be looked up (in the current channel) and transcribed
+        :message: Message link or ID to be transcribed.
+        """
         replied_to = True if ctx.message.reference is not None else False
         if replied_to:
             message_reference = ctx.message.reference.resolved

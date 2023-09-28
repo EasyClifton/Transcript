@@ -11,8 +11,8 @@ import logging
 import discord
 from discord.ext import commands
 
-discord_token = ''
-config_filename = "config.ini"
+DISCORD_TOKEN = ''
+CONFIG_FILENAME = "config.ini"
 
 # Checks whether the config exists and creates an empty one if it doesn't.
 conf_exists = configutil.check_existance(config_filename)
@@ -21,7 +21,7 @@ if not conf_exists:
     logging.info("Default config file created. Make sure to fill it in.\nExiting.")
     sys.exit()
 
-config = configutil.read_config(config_filename)
+config = configutil.read_config(CONFIG_FILENAME)
 
 logging.info(f"Using {config['OPTIONS']['WhisperMode']} transcription mode.")
 
@@ -39,7 +39,7 @@ intents.message_content = True
 
 client = commands.Bot(command_prefix='!', intents=intents)
 
-discord_token = config['SECRETS']['DiscordToken']
+DISCORD_TOKEN = config['SECRETS']['DiscordToken']
 
 
 @client.event
@@ -70,5 +70,5 @@ async def on_message(message):
 
     await client.process_commands(message)
 
-client.run(discord_token)
+client.run(DISCORD_TOKEN)
 
