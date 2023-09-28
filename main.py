@@ -15,9 +15,9 @@ DISCORD_TOKEN = ''
 CONFIG_FILENAME = "config.ini"
 
 # Checks whether the config exists and creates an empty one if it doesn't.
-conf_exists = configutil.check_existance(config_filename)
+conf_exists = configutil.check_existance(CONFIG_FILENAME)
 if not conf_exists:
-    create_default_config(filename=config_filename)
+    create_default_config(filename=CONFIG_FILENAME)
     logging.info("Default config file created. Make sure to fill it in.\nExiting.")
     sys.exit()
 
